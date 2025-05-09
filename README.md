@@ -2,6 +2,8 @@
 
 An autonomous research agent that leverages large language models to explore academic topics comprehensively with minimal human intervention.
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1fcu2hZVh2U-EuSYRZ7VmLbrDOrIoD6eb?usp=sharing)
+
 ## Overview
 
 This project demonstrates how AI can transform the research process by automating the collection, analysis, and synthesis of information on any given topic. The agent follows a structured workflow that breaks down research questions, expands queries, searches for relevant information, and generates polished summaries—all with minimal human guidance.
@@ -69,6 +71,14 @@ result = research_agent(topic)
 print(result)
 ```
 
+### Google Colab
+You can run this project directly in Google Colab using the badge at the top of this README or by clicking [here](https://colab.research.google.com/drive/1fcu2hZVh2U-EuSYRZ7VmLbrDOrIoD6eb?usp=sharing).
+
+When using Colab:
+1. You'll need to add your API keys to the Colab secrets
+2. Follow the notebook instructions for executing each cell
+3. You can modify the research topic and explore different subject areas
+
 ## Future Improvements
 
 - Integration with additional knowledge sources (academic databases, books)
@@ -90,7 +100,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 Feel free to contribute to this project by submitting issues or pull requests!
-
-
-
-
