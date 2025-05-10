@@ -1,0 +1,16 @@
+models:
+  default: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+  parameters:
+    max_tokens: 256
+    temperature: 0.7
+    top_p: 0.7
+    top_k: 50
+    repetition_penalty: 1
+
+search:
+  max_results: 10
+  timeout: 30
+
+cache:
+  enabled: true
+  expiry: 3600  # 1 hour
