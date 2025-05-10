@@ -4,10 +4,27 @@ An autonomous research agent that leverages large language models to explore aca
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1fcu2hZVh2U-EuSYRZ7VmLbrDOrIoD6eb?usp=sharing)
 
+## Table of Contents
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [How It Works](#how-it-works)
+- [Technical Implementation](#technical-implementation)
+- [Sample Output](#sample-output)
+- [Setup and Usage](#setup-and-usage)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [Running the Agent](#running-the-agent)
+  - [Google Colab](#google-colab)
+- [Project Structure](#project-structure)
+- [Future Improvements](#future-improvements)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
 ## Overview
 
 This project demonstrates how AI can transform the research process by automating the collection, analysis, and synthesis of information on any given topic. The agent follows a structured workflow that breaks down research questions, expands queries, searches for relevant information, and generates polished summaries—all with minimal human guidance.
-
 
 ## Key Features
 
@@ -34,16 +51,14 @@ The system is built in Python and uses:
 - Together AI API for accessing Meta-Llama-3.1 models
 - Web search APIs for information retrieval
 - Regular expressions for parsing and extracting relevant information
+- BeautifulSoup for HTML parsing
+- Tenacity for robust API calls with retry logic
 - Markdown formatting for presentable outputs
 
 ## Sample Output
 
-For the topic "Applications of Artificial Intelligence in Education," the agent produces a well-structured summary that includes:
+For the topic "Applications of Artificial Intelligence in Education," the agent produces a well-structured summary like this:
 
-- Overview of key educational technology concepts
-- Analysis of online learning platforms
-- Discussion of implementation challenges and considerations
-- References to reputable sources
 
 ## Setup and Usage
 
@@ -79,6 +94,23 @@ When using Colab:
 2. Follow the notebook instructions for executing each cell
 3. You can modify the research topic and explore different subject areas
 
+## Project Structure
+```
+llm-research-agent/
+├── examples/              # Example usage scripts
+├── notebooks/             # Jupyter notebooks for development and demonstration
+├── src/                   # Source code
+│   ├── agent/             # Research agent implementation
+│   │   ├── research_agent.py  # Main agent class
+│   │   └── tools.py       # Research tools implementation
+│   └── utils/             # Utility functions
+├── .env                   # Environment variables (not tracked by git)
+├── .gitignore             # Git ignore file
+├── README.md              # Project documentation
+├── requirements.txt       # Project dependencies
+└── LICENSE                # License information
+```
+
 ## Future Improvements
 
 - Integration with additional knowledge sources (academic databases, books)
@@ -86,6 +118,18 @@ When using Colab:
 - Improved search result filtering and source credibility assessment
 - Support for multimedia content in research outputs
 - User interface for easier interaction with the research agent
+
+## Contributing
+
+Contributions are welcome! Here's how you can contribute:
+
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit your changes**: `git commit -m 'Add some amazing feature'`
+4. **Push to the branch**: `git push origin feature/amazing-feature`
+5. **Open a pull request**
+
+Please make sure to update tests as appropriate and adhere to the existing coding style.
 
 ## License
 

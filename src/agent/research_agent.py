@@ -17,6 +17,17 @@ from .tools import (
 class ResearchAgent:
     def __init__(self):
         """Initialize the research agent."""
+
+        # Load environment variables
+        load_dotenv()
+        
+        # Print API key status (for debugging)
+        api_key = os.getenv('TOGETHER_API_KEY')
+        if api_key:
+            print("API key loaded successfully")
+        else:
+            print("WARNING: TOGETHER_API_KEY not found in environment variables")
+            
         self.cache = {
             'subtopics': [],
             'expanded_queries': [],
