@@ -25,7 +25,7 @@ def main():
     agent = ResearchAgent()
     
     # Define research topic
-    topic = "how to be a machine learning engineer"
+    topic = "the drugs for RAS inhibitors"
     
     # Execute research
     result = agent.research(topic)
