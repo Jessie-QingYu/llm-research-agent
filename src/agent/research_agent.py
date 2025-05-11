@@ -58,64 +58,50 @@ class ResearchAgent:
         }
 
     def research(self, topic: str) -> str:
-        """
-        Execute the research workflow on the given topic.
+        """Execute the research process on a given topic."""
+        print(f"Starting research on: {topic}")
         
-        Args:
-            topic: The research topic to explore
-            
-        Returns:
-            str: The improved summary of the research
-        """
-        result = topic  # Initialize result
+        # Step 1: Break down the topic into subtopics
+        self.cache['subtopics'] = topic_breakdown(topic)
+        print(f"Subtopics: {self.cache['subtopics']}")
         
-        for step in self.steps:
-            print(f"Step: {step}")
-            
-            # Execute the appropriate function for each step
-            if "Break down the research topic" in step:
-                subtopics = topic_breakdown(topic)
-                self.cache['subtopics'] = subtopics
-                result = json.dumps(subtopics)
-                
-            elif "Generate related keywords" in step:
-                expanded_queries = query_expansion(self.cache['subtopics'])
-                self.cache['expanded_queries'] = expanded_queries
-                result = json.dumps(expanded_queries)
-                
-            elif "Perform a search query" in step:
-                search_results = search(self.cache['expanded_queries'])
-                self.cache['search_results'].extend(search_results)
-                result = "\n".join(search_results)
-                
-            elif "summarize" in step.lower():
-                summary = summarize_content(result)
-                self.cache['summary'] = summary
-                result = summary
-                
-            elif "critique" in step.lower():
-                critique = critique_summary(self.cache['summary'])
-                self.cache['critique'] = critique
-                result = critique
-                
-            elif "improve" in step.lower():
-                improved_summary = improve_summary(self.cache['summary'], self.cache['critique'])
-                self.cache['improved_summary'] = improved_summary
-                result = improved_summary
-            
-            print(f"Result: {result[:100]}...\n")
-            
-        # Format the final result with references
+        # Step 2: Generate expanded queries
+        self.cache['expanded_queries'] = query_expansion(self.cache['subtopics'])
+        print(f"Expanded queries: {self.cache['expanded_queries'][:5]}...")
+        
+        # Step 3: Perform search
+        self.cache['search_results'] = search(self.cache['expanded_queries'])
+        print(f"Found {len(self.cache['search_results'])} search results")
+        
+        # Step 4: Summarize content
+        self.cache['summary'] = summarize_content(self.cache['search_results'])
+        print("Generated summary")
+        
+        # Step 5: Critique summary
+        self.cache['critique'] = critique_summary(self.cache['summary'])
+        print("Generated critique")
+        
+        # Step 6: Improve summary
+        self.cache['improved_summary'] = improve_summary(self.cache['summary'], self.cache['critique'])
+        print("Generated improved summary")
+        
+        # Extract references from search results
         references = []
+        seen_urls = set()  # To prevent duplicate references
+        
         for i, result in enumerate(self.cache['search_results'][:5]):
             # Extract title and link if available
             match = re.match(r'(.*?) - (https?://\S+)', result)
             if match:
                 title, link = match.groups()
-                references.append(f"{i+1}. [{title}]({link})")
+                # Check if we've already seen this URL
+                if link not in seen_urls:
+                    seen_urls.add(link)
+                    references.append(f"{len(references)+1}. [{title}]({link})")
             else:
-                references.append(f"{i+1}. {result}")
-                
+                # If no URL pattern found, just use the result as is
+                references.append(f"{len(references)+1}. {result}")
+        
         formatted_references = "\n".join(references)
         
         final_result = f"{self.cache['improved_summary']}\n\nReferences:\n{formatted_references}"
