@@ -9,6 +9,9 @@ import time
 # Load environment variables from .env file
 load_dotenv()
 
+# Set the model to use - using the free model
+MODEL_TO_USE = "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free"
+
 # Try to import Together, but provide fallbacks if not available
 try:
     from together import Together
@@ -50,7 +53,7 @@ def topic_breakdown(topic: str) -> List[str]:
         try:
             prompt = f"Break down the following research topic into smaller, more focused subtopics:\n\n{topic}"
             response_text = client.chat.completions.create(
-                    model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+                    model=MODEL_TO_USE,  # Using the free model
                     messages=[
                           {"role": "user", "content": prompt}
                         ],
@@ -59,7 +62,6 @@ def topic_breakdown(topic: str) -> List[str]:
                     top_p=0.7,
                     top_k=50,
                     repetition_penalty=1,
-                    stop=["<|eot_id|>"],
                     stream=False
                 ).choices[0].message.content
             subtopics = re.findall(r'\*\*(.*?)\*\*', response_text)

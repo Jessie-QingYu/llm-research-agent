@@ -34,14 +34,5 @@ def main():
     print(f"Research Results for: {topic}\n")
     print(result)
 
-    # Check API key validity
-    headers = {
-        "Authorization": f"Bearer {api_key}"
-    }
-
-    response = requests.get("https://api.together.xyz/v1/models", headers=headers)
-    print(f"API Key Validity: {response.status_code}")
-    print(response.json())
-
 if __name__ == "__main__":
     main()
