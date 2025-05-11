@@ -1,4 +1,4 @@
-together>=0.1.0
+together>=0.1.5
 openai>=1.0.0
 tqdm>=4.66.0
 requests>=2.31.0
@@ -8,7 +8,9 @@ numpy>=1.24.0
 tenacity>=8.2.3
 python-dotenv>=1.0.0
 pyyaml>=6.0.1
+pytest>=7.0.0
 typing-extensions>=4.8.0
+   
 
 
 

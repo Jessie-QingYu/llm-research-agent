@@ -5,12 +5,16 @@ import requests
 from typing import List, Dict, Optional
 from dotenv import load_dotenv
 import time
+from ..utils.helpers import load_config
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Set the model to use - using the free model
-MODEL_TO_USE = "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free"
+# Load configuration
+config = load_config()
+MODEL_TO_USE = config['models']['default']
+MODEL_PARAMS = config['models']['parameters']
+SEARCH_CONFIG = config['search']
 
 # Try to import Together, but provide fallbacks if not available
 try:
@@ -332,7 +336,7 @@ def improve_summary(summary: str, critique: str) -> str:
     """Improve the summary based on the critique."""
     if client:
         try:
-            prompt = f"""Please improve the following summary about becoming a machine learning engineer based on the critique provided:
+            prompt = f"""Please improve the following summary based on the critique provided:
 
 Original Summary:
 {summary}
@@ -340,7 +344,7 @@ Original Summary:
 Critique:
 {critique}
 
-Create an improved, comprehensive summary that addresses all the issues mentioned in the critique. The improved summary should be well-structured, accurate, and highly actionable for someone wanting to become a machine learning engineer.
+Create an improved, comprehensive summary that addresses all the issues mentioned in the critique. The improved summary should be well-structured, accurate, and highly actionable for someone interested in this topic.
 """
             
             response_text = client.chat.completions.create(
@@ -360,108 +364,20 @@ Create an improved, comprehensive summary that addresses all the issues mentione
         except Exception as e:
             print(f"Error in improve_summary: {e}")
     
-    # Fallback response
+    # Fallback response should be generic, not specific to ML engineering
     return """
-# Comprehensive Guide to Becoming a Machine Learning Engineer
+# Summary
 
-Becoming a successful Machine Learning Engineer requires a strategic approach to skill development, education, and practical experience. This guide provides a roadmap to help you navigate this exciting career path.
+This is a fallback summary generated when the API call fails. The actual summary would contain information about the researched topic, addressing the points raised in the critique.
 
-## 1. Essential Technical Skills
+The summary would typically include:
+- Key concepts and definitions
+- Important aspects of the topic
+- Practical applications
+- Current trends and developments
+- Relevant resources for further exploration
 
-**Programming Proficiency:**
-- **Python**: The primary language for ML development (focus on NumPy, Pandas, Matplotlib)
-- **SQL**: For database interactions and data extraction
-- **Optional**: R, Java, or C++ for specific applications
-
-**Mathematics and Statistics:**
-- Linear Algebra: Understand vectors, matrices, and tensor operations
-- Calculus: Grasp derivatives, gradients, and optimization techniques
-- Probability and Statistics: Master statistical testing, distributions, and Bayesian thinking
-
-**Machine Learning Frameworks:**
-- TensorFlow and Keras: For building and deploying ML models
-- PyTorch: Popular for research and deep learning applications
-- Scikit-learn: For classical ML algorithms and preprocessing
-
-**Cloud and MLOps:**
-- AWS (SageMaker), Azure ML, or Google Cloud AI: For scalable ML deployment
-- Docker and Kubernetes: For containerization and orchestration
-- CI/CD for ML: Implementing automated testing and deployment pipelines
-
-## 2. Education and Learning Path
-
-**Formal Education Options:**
-- Bachelor's degree in Computer Science, Data Science, Mathematics, or related field
-- Master's or PhD for research-oriented positions or specialized roles
-- Bootcamps as an alternative or supplement to traditional education
-
-**Self-Learning Roadmap:**
-1. **Months 1-3**: Programming fundamentals and mathematics refresher
-   - Recommended: CS50 (Harvard), Mathematics for Machine Learning (Imperial College London)
-2. **Months 4-6**: Machine learning basics and algorithms
-   - Recommended: Andrew Ng's Machine Learning course, Fast.ai
-3. **Months 7-9**: Deep learning and specialized areas
-   - Recommended: Deep Learning Specialization (Coursera), Practical Deep Learning for Coders
-4. **Months 10-12**: Projects and portfolio building
-   - Focus on solving real problems in domains that interest you
-
-**Certifications Worth Pursuing:**
-- AWS Machine Learning Specialty
-- TensorFlow Developer Certificate
-- Microsoft Azure AI Engineer
-- Google Professional Machine Learning Engineer
-
-## 3. Building Practical Experience
-
-**Project Portfolio:**
-- Start with tutorial-based projects, then build original solutions
-- Include diverse projects: classification, regression, NLP, computer vision
-- Document your work thoroughly on GitHub with clean code and explanations
-
-**Practical Learning Opportunities:**
-- Kaggle competitions: Start with "Getting Started" competitions
-- Open-source contributions: Find beginner-friendly ML projects
-- Internships or freelance projects: Gain real-world experience
-
-**Networking and Community:**
-- Join ML communities: Reddit r/MachineLearning, Discord servers, local meetups
-- Attend conferences: NeurIPS, ICML, or local ML events
-- Connect with professionals on LinkedIn and Twitter
-
-## 4. Career Development
-
-**Job Search Strategy:**
-- Target entry-level positions: ML Engineer, Junior Data Scientist, AI Developer
-- Highlight projects relevant to the company's domain
-- Prepare for technical interviews with a focus on ML algorithms and coding challenges
-
-**Salary Expectations:**
-- Entry-level: $80,000-$110,000 (US average)
-- Mid-level: $110,000-$150,000
-- Senior-level: $150,000+ (can exceed $200,000 at top companies)
-
-**Career Progression:**
-- Junior ML Engineer → ML Engineer → Senior ML Engineer → Lead ML Engineer/Architect
-- Alternative paths: ML Research Scientist, ML Product Manager, AI Consultant
-
-## 5. Continuous Growth
-
-**Staying Current:**
-- Follow research papers on arXiv and conference publications
-- Subscribe to newsletters: Import AI, The Batch, ML Ops Roundup
-- Take advanced courses in emerging areas like reinforcement learning or GANs
-
-**Domain Specialization:**
-- Consider focusing on a specific industry: healthcare, finance, robotics, etc.
-- Develop domain expertise alongside technical skills
-- Understand the business context and value of ML applications
-
-**Soft Skills Development:**
-- Communication: Learn to explain complex concepts to non-technical stakeholders
-- Teamwork: Collaborate effectively with data engineers, product managers, and domain experts
-- Business acumen: Understand how ML creates value for organizations
-
-By following this comprehensive approach, you'll be well-positioned to build a successful career as a Machine Learning Engineer in this rapidly evolving field.
+For accurate results, please ensure your API key is correctly configured and try again.
 """
 
 # Parse Tool Response
@@ -493,55 +409,3 @@ def extract_title_and_link(result: str) -> tuple:
     if match:
         return match.groups()
     return (result, "#")
-
-# You can keep the class for backward compatibility if needed
-class ResearchTools:
-    topic_breakdown = staticmethod(topic_breakdown)
-    query_expansion = staticmethod(query_expansion)
-    search = staticmethod(search)
-    summarize_content = staticmethod(summarize_content)
-    critique_summary = staticmethod(critique_summary)
-    improve_summary = staticmethod(improve_summary)
-    parse_tool_response = staticmethod(parse_tool_response)
-
-    def research(self, topic: str) -> str:
-        """Execute the research process on a given topic."""
-        print(f"Starting research on: {topic}")
-        
-        # Step 1: Break down the topic into subtopics
-        self.cache['subtopics'] = topic_breakdown(topic)
-        print(f"Subtopics: {self.cache['subtopics']}")
-        
-        # Step 2: Generate expanded queries
-        self.cache['expanded_queries'] = query_expansion(self.cache['subtopics'])
-        print(f"Expanded queries: {self.cache['expanded_queries'][:5]}...")
-        
-        # Step 3: Perform search
-        self.cache['search_results'] = search(self.cache['expanded_queries'])
-        print(f"Found {len(self.cache['search_results'])} search results")
-        
-        # Step 4: Summarize content
-        self.cache['summary'] = summarize_content(self.cache['search_results'])
-        print("Generated summary")
-        
-        # Step 5: Critique summary
-        self.cache['critique'] = critique_summary(self.cache['summary'])
-        print("Generated critique")
-        
-        # Step 6: Improve summary
-        self.cache['improved_summary'] = improve_summary(self.cache['summary'], self.cache['critique'])
-        print("Generated improved summary")
-        
-        # Extract references from search results
-        from .tools import extract_title_and_link
-        references = []
-        for i, result in enumerate(self.cache['search_results'][:5]):
-            title, link = extract_title_and_link(result)
-            if title and link:
-                references.append(f"{i+1}. [{title}]({link})")
-        formatted_references = "\n".join(references)
-        
-        # Add references to the final output
-        final_result = self.cache['improved_summary'] + "\n\nReferences:\n" + formatted_references
-        
-        return final_result
