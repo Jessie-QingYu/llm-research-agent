@@ -21,6 +21,8 @@ An autonomous research agent that leverages large language models to explore aca
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
+- [Performance Considerations](#performance-considerations)
+- [Troubleshooting](#troubleshooting)
 
 ## Overview
 
@@ -57,8 +59,43 @@ The system is built in Python and uses:
 
 ## Sample Output
 
-For the topic "Applications of Artificial Intelligence in Education," the agent produces a well-structured summary like this:
+For the topic "Climate Change Mitigation Strategies," the agent produces a well-structured summary like this:
 
+### Climate Change Mitigation Strategies
+
+Various approaches are being implemented globally to address climate change:
+
+**Renewable Energy Transition**
+- Shifting from fossil fuels to solar, wind, and hydroelectric power
+- Implementing grid modernization to support renewable integration
+- Examples include Denmark's wind energy program and Morocco's Noor Solar Complex
+
+**Carbon Capture and Sequestration**
+- Technologies that capture CO₂ emissions from industrial processes
+- Methods for storing carbon in geological formations or utilizing it in products
+- Projects like Norway's Sleipner facility and Canada's Quest CCS system
+
+**Sustainable Transportation**
+- Electric vehicle adoption and charging infrastructure development
+- Public transit expansion and efficiency improvements
+- Policies promoting cycling, walking, and reduced car dependency
+
+**Energy Efficiency Measures**
+- Building retrofits and improved insulation standards
+- Smart grid technologies and demand response systems
+- Energy-efficient appliance standards and LED lighting adoption
+
+**Policy and Economic Instruments**
+- Carbon pricing through taxes or cap-and-trade systems
+- Green financing initiatives and climate bonds
+- International agreements like the Paris Climate Accord
+
+*References:*
+1. [IPCC Special Report on Climate Change Mitigation](https://example.com/ipcc-mitigation)
+2. [Renewable Energy Solutions for Climate Change](https://example.com/renewable-solutions)
+3. [Carbon Capture Technologies: Current Status and Future Prospects](https://example.com/carbon-capture)
+4. [Sustainable Transportation Systems and Climate Change](https://example.com/sustainable-transport)
+5. [Economic Policies for Climate Change Mitigation](https://example.com/climate-economics)
 
 ## Setup and Usage
 
@@ -68,9 +105,25 @@ For the topic "Applications of Artificial Intelligence in Education," the agent 
 - Web search API key
 
 ### Installation
+
+1. Clone the repository:
 ```bash
-pip install Together
+git clone https://github.com/yourusername/llm-research-agent.git
+cd llm-research-agent
 ```
+
+2. Install required packages:
+```bash
+pip install -r requirements.txt
+```
+
+3. Set up environment variables:
+   - Create a `.env` file in the project root
+   - Add your API keys:
+   ```
+   TOGETHER_API_KEY=your_together_api_key
+   YOU_API_KEY=your_you_api_key
+   ```
 
 ### Configuration
 Set up your API keys as environment variables:
@@ -80,10 +133,30 @@ client = Together(api_key=userdata.get('TOGETHER_API_KEY'))
 ```
 
 ### Running the Agent
+
+#### Basic Usage
 ```python
+from src.agent.research_agent import ResearchAgent
+agent = ResearchAgent()
 topic = "Your Research Topic"
 result = research_agent(topic)
 print(result)
+```
+
+#### Saving Results to File
+```python
+import json
+
+# Execute research
+result = agent.research("Climate Change Mitigation Strategies")
+
+# Save to markdown file
+with open("research_results.md", "w") as f:
+    f.write(result)
+
+# Save cache for later analysis
+with open("research_cache.json", "w") as f:
+    json.dump(agent.cache, f, indent=2)
 ```
 
 ### Google Colab
@@ -97,18 +170,22 @@ When using Colab:
 ## Project Structure
 ```
 llm-research-agent/
-├── examples/              # Example usage scripts
-├── notebooks/             # Jupyter notebooks for development and demonstration
-├── src/                   # Source code
-│   ├── agent/             # Research agent implementation
+├── config/               # Configuration files
+│   └── config.yaml       # Main configuration
+├── examples/             # Example usage scripts
+├── notebooks/            # Jupyter notebooks for development and demonstration
+├── src/                  # Source code
+│   ├── agent/            # Research agent implementation
 │   │   ├── research_agent.py  # Main agent class
-│   │   └── tools.py       # Research tools implementation
-│   └── utils/             # Utility functions
-├── .env                   # Environment variables (not tracked by git)
-├── .gitignore             # Git ignore file
-├── README.md              # Project documentation
-├── requirements.txt       # Project dependencies
-└── LICENSE                # License information
+│   │   └── tools.py      # Research tools implementation
+│   └── utils/            # Utility functions
+│       └── helpers.py    # Helper functions including config loading
+├── tests/                # Test files
+├── .env                  # Environment variables (not tracked by git)
+├── .gitignore            # Git ignore file
+├── README.md             # Project documentation
+├── requirements.txt      # Project dependencies
+└── LICENSE               # License information
 ```
 
 ## Future Improvements
@@ -140,6 +217,30 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Together AI for providing access to state-of-the-art language models
 - You.com for search API capabilities
 - The open-source NLP community for inspiration and resources
+
+## Performance Considerations
+
+- **API Costs**: Using LLMs via API calls incurs costs. Monitor your usage.
+- **Rate Limits**: Together AI and search APIs have rate limits. Implement retry logic.
+- **Memory Usage**: Processing large research topics may require significant memory.
+- **Execution Time**: A complete research cycle typically takes 2-5 minutes depending on the topic complexity.
+
+## Troubleshooting
+
+### API Key Issues
+- Ensure your API keys are correctly set in the `.env` file
+- Verify that you have sufficient credits/quota on your Together AI account
+- Check that your API key has the necessary permissions
+
+### Search Results Problems
+- If search results are empty, try using more general queries
+- Ensure your YOU_API_KEY is valid and has search permissions
+- Check your internet connection
+
+### Model Errors
+- If you encounter model errors, try reducing the max_tokens parameter
+- Some models may have rate limits - implement exponential backoff
+- Check the Together AI status page for service disruptions
 
 ---
 
